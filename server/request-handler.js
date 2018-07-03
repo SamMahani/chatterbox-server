@@ -11,6 +11,8 @@ this file and include it in basic-server.js so that it actually works.
 *Hint* Check out the node module documentation at http://nodejs.org/api/modules.html.
 
 **************************************************************/
+var tester = 'Hello, World!';
+
 
 var requestHandler = function(request, response) {
   // Request and Response come from node's http module.
@@ -28,6 +30,32 @@ var requestHandler = function(request, response) {
   // debugging help, but you should always be careful about leaving stray
   // console.logs in your code.
   console.log('Serving request type ' + request.method + ' for url ' + request.url);
+//******************************
+  // if(request === 'request') {
+  //   console.log('someone made a request');
+  // };
+
+  const { method, url } = request;
+
+  console.log(method, url);
+
+  if(request.method === 'GET') {
+    //response.statusCode = 200;
+    tester = JSON.stringify('test');
+
+  }//&& request.url.contains('/hello')
+
+  let body = [];
+  request.on('data', (chunk) => {
+    body.push(chunk);
+  }).on('end', () => {
+  body = Buffer.concat(body).toString();
+  // at this point, `body` has the entire request body stored in it as a string
+});
+  
+//******************************
+
+
 
   // The outgoing status.
   var statusCode = 200;
@@ -52,7 +80,7 @@ var requestHandler = function(request, response) {
   //
   // Calling .end "flushes" the response's internal buffer, forcing
   // node to actually send all the data over to the client.
-  response.end('Hello, World!');
+  response.end(tester);
 };
 
 // These headers will allow Cross-Origin Resource Sharing (CORS).
@@ -71,3 +99,4 @@ var defaultCorsHeaders = {
   'access-control-max-age': 10 // Seconds.
 };
 
+exports.requestHandler = requestHandler;

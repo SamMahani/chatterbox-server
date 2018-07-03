@@ -10,11 +10,12 @@
   },
   "scripts": {
     "postinstall": "curl -s https://raw.githubusercontent.com/reactorcore/pomander/master/bin/install | bash",
-    "start": "node server/basic-server.js",
+    "start": "nodemon server/basic-server.js",
     "start:es6": "babel-node server/basic-server.js",
     "test": "mocha server/spec",
     "test:es6": "mocha --compilers js:babel-register server/spec",
-    "lint": "eslint ./"
+    "lint": "eslint ./",
+    "karma": "./node_modules/karma/bin/karma start"
   },
   "devDependencies": {
     "babel-cli": "^6.7.5",
@@ -22,6 +23,9 @@
     "babel-register": "^6.7.2",
     "chai": "^3.5.0",
     "eslint-config-hackreactor": "git://github.com/reactorcore/eslint-config-hackreactor",
+    "karma": "^2.0.4",
+    "karma-chrome-launcher": "^2.2.0",
+    "karma-jasmine": "^1.1.2",
     "mocha": "^2.4.5",
     "request": "^2.70.0"
   },
@@ -29,5 +33,8 @@
     "presets": [
       "es2015"
     ]
+  },
+  "dependencies": {
+    "underscore": "^1.9.1"
   }
 }
