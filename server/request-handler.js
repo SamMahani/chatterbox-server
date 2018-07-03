@@ -29,7 +29,6 @@ var requestHandler = function(request, response) {
   // Adding more logging to your server can be an easy way to get passive
   // debugging help, but you should always be careful about leaving stray
   // console.logs in your code.
-  console.log('Serving request type ' + request.method + ' for url ' + request.url);
 //******************************
   // if(request === 'request') {
   //   console.log('someone made a request');
@@ -37,19 +36,20 @@ var requestHandler = function(request, response) {
 
   const { method, url } = request;
 
-  console.log(method, url);
 
-  if(request.method === 'GET') {
+  if(request.method === 'POST') {
     //response.statusCode = 200;
-    tester = JSON.stringify('test');
+    tester = JSON.stringify('you are here');
 
   }//&& request.url.contains('/hello')
 
   let body = [];
   request.on('data', (chunk) => {
+    console.log("==>", chunk)
     body.push(chunk);
   }).on('end', () => {
   body = Buffer.concat(body).toString();
+  console.log("==>", body)
   // at this point, `body` has the entire request body stored in it as a string
 });
   
