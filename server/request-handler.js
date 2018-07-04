@@ -11,74 +11,40 @@ this file and include it in basic-server.js so that it actually works.
 *Hint* Check out the node module documentation at http://nodejs.org/api/modules.html.
 
 **************************************************************/
-var tester = 'Hello, World!';
-
-
+var storageMessages = {results:[]}
 var requestHandler = function(request, response) {
-  // Request and Response come from node's http module.
-  //
-  // They include information about both the incoming request, such as
-  // headers and URL, and about the outgoing response, such as its status
-  // and content.
-  //
-  // Documentation for both request and response can be found in the HTTP section at
-  // http://nodejs.org/documentation/api/
+  var headers = defaultCorsHeaders;
+  var statusCode = 200;
+  response.writeHead(statusCode, headers)
 
-  // Do some basic logging.
-  //
-  // Adding more logging to your server can be an easy way to get passive
-  // debugging help, but you should always be careful about leaving stray
-  // console.logs in your code.
+    let { method, url } = request;
 
 
 
-  // // The outgoing status.
-  // var statusCode = 200;
+  if( method === 'GET' && url ==='/classes/messages'){
+    
 
-  // // See the note below about CORS headers.
-  // var headers = defaultCorsHeaders;
-
-  // // Tell the client we are sending them plain text.
-  // //
-  // // You will need to change this if you are sending something
-  // // other than plain text, like JSON or HTML.
-  // headers['Content-Type'] = 'text/plain';
-
-  // // .writeHead() writes to the request line and headers of the response,
-  // // which includes the status and all headers.
-  // response.writeHead(statusCode, headers);
-
-
-
-
-  const { headers, method, url } = request;
+    response.end(JSON.stringify(storageMessages));
+    
+  } else if ( method === 'POST' && url === '/classes/messages'){
+    
+    statusCode = 201;
+    
   let body = [];
-  request.on('error', (err) => {
-    console.error(err);
-  }).on('data', (chunk) => {
-    body.push(chunk);
-  }).on('end', () => {
-    body = Buffer.concat(body).toString();
-    // BEGINNING OF NEW STUFF
-
-    response.on('error', (err) => {
-      console.error(err);
+    request.on('data', (chunk) => {
+      body.push(chunk);
+    }).on('end', () => {
+      body = Buffer.concat(body).toString();
+      storageMessages.results.push(JSON.parse(body));
+      response.writeHead(statusCode, headers);
+      response.end();
     });
 
-    response.statusCode = 200;
-    response.setHeader('Content-Type', 'application/json');
-    // Note: the 2 lines above could be replaced with this next one:
-    // response.writeHead(200, {'Content-Type': 'application/json'})
-
-    const responseBody = { headers, method, url, body };
-
-    response.write(JSON.stringify(responseBody));
+  } else {
+    statusCode = 404;
+    response.writeHead(statusCode, headers)
     response.end();
-    // Note: the 2 lines above could be replaced with this next one:
-    // response.end(JSON.stringify(responseBody))
-
-    // END OF NEW STUFF
-  });
+  }
 
 
 
